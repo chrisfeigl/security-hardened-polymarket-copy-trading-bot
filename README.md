@@ -59,6 +59,25 @@ npm start             # Start trading
 - **MongoDB Integration** - Persistent storage of all trades and positions
 - **Price Protection** - Built-in slippage checks to avoid unfavorable fills
 
+## Security
+
+This repository has been security-hardened to protect sensitive credentials:
+
+### Protections Implemented
+
+- **No Secret Logging** - Private keys and API credentials are never logged to console or files
+- **Safe Error Messages** - Validation errors describe the problem without echoing potentially sensitive values
+- **Subprocess Isolation** - Child processes receive only allowlisted environment variables, preventing credential leakage
+- **Console Suppression** - API key creation/derivation output is suppressed to prevent credential exposure
+
+### Best Practices
+
+- Use a **dedicated wallet** with limited funds for copy trading
+- Never commit `.env` files to version control (already in `.gitignore`)
+- Set restrictive file permissions on `.env`: `chmod 600 .env`
+- Regularly rotate API keys and monitor wallet activity
+- Run on trusted infrastructure with encrypted storage
+
 ### Monitoring Method
 
 The bot currently uses the **Polymarket Data API** to monitor trader activity and detect new positions. The monitoring system polls trader positions at configurable intervals (default: 1 second) to ensure timely trade detection and execution.

@@ -187,8 +187,8 @@ async function findRealProxyWallet() {
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
     console.log('1. Open polymarket.com\n');
-    console.log('2. Import private key into MetaMask:\n');
-    console.log(`   ${PRIVATE_KEY.slice(0, 10)}...${PRIVATE_KEY.slice(-6)}\n`);
+    console.log('2. Import the private key from your .env file into MetaMask\n');
+    console.log(`   (EOA address: ${eoaAddress})\n`);
     console.log('3. Connect to Polymarket\n');
     console.log('4. Open browser console (F12)\n');
     console.log('5. Execute:\n');

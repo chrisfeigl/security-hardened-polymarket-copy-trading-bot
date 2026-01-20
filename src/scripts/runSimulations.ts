@@ -48,17 +48,49 @@ const PRESETS = {
     },
 };
 
+// Allowlist of environment variables safe to pass to simulation subprocesses
+// Explicitly excludes sensitive variables like PRIVATE_KEY, MONGO_URI, etc.
+const ALLOWED_ENV_VARS = [
+    'PATH',
+    'NODE_ENV',
+    'HOME',
+    'USER',
+    'SHELL',
+    'TERM',
+    'LANG',
+    'LC_ALL',
+    // Node.js related
+    'NODE_PATH',
+    'NODE_OPTIONS',
+    // TypeScript related
+    'TS_NODE_PROJECT',
+    'TS_NODE_TRANSPILE_ONLY',
+];
+
+function buildSafeEnv(simEnv: Record<string, string>): Record<string, string> {
+    const safeEnv: Record<string, string> = {};
+
+    // Only copy allowlisted environment variables
+    for (const key of ALLOWED_ENV_VARS) {
+        if (process.env[key]) {
+            safeEnv[key] = process.env[key] as string;
+        }
+    }
+
+    // Add simulation-specific variables
+    return { ...safeEnv, ...simEnv };
+}
+
 function runSimulation(config: SimulationConfig): Promise<void> {
     return new Promise((resolve, reject) => {
-        const env = {
-            ...process.env,
+        const env = buildSafeEnv({
             SIM_TRADER_ADDRESS: config.traderAddress,
             SIM_HISTORY_DAYS: String(config.historyDays),
             SIM_MIN_ORDER_USD: String(config.minOrderSize),
             SIM_MAX_TRADES: String(config.maxTrades || 5000),
             SIM_RESULT_TAG: config.tag || '',
             TRADE_MULTIPLIER: String(config.multiplier),
-        };
+        });
 
         console.log(colors.cyan('\n🚀 Starting simulation...'));
         console.log(colors.gray(`   Trader: ${config.traderAddress.slice(0, 10)}...`));
